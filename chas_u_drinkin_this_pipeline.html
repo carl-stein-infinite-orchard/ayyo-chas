@@ -1,0 +1,668 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body, .root {
+    font-family: 'Syne', var(--font-sans), sans-serif;
+    color: var(--color-text-primary);
+    background: transparent;
+  }
+
+  .root { padding: 0 0 2rem; }
+
+  .header {
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    padding: 1.5rem 0 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .header-eyebrow {
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header-title {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .header-title em {
+    font-style: normal;
+    color: #E85D24;
+  }
+
+  .header-sub {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    margin-top: 8px;
+    font-family: var(--font-sans);
+  }
+
+  .section {
+    margin-bottom: 2rem;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 0.5px;
+    background: var(--color-border-tertiary);
+  }
+
+  /* Pipeline flow */
+  .pipeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .stage {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+  }
+
+  .stage-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    flex-shrink: 0;
+  }
+
+  .stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    flex-shrink: 0;
+    margin-top: 14px;
+  }
+
+  .stage-line {
+    width: 1px;
+    flex: 1;
+    background: var(--color-border-tertiary);
+    min-height: 16px;
+  }
+
+  .stage-card {
+    flex: 1;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    background: var(--color-background-primary);
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .stage-card:hover {
+    border-color: var(--color-border-secondary);
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+
+  .stage-name {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .stage-badge {
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+
+  .badge-auto { background: var(--color-background-success); color: var(--color-text-success); }
+  .badge-review { background: var(--color-background-warning); color: var(--color-text-warning); }
+  .badge-manual { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+  .stage-desc {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    font-family: var(--font-sans);
+  }
+
+  .stage-tools {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tool-pill {
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 10px;
+    padding: 2px 7px;
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 4px;
+    color: var(--color-text-tertiary);
+    background: var(--color-background-secondary);
+  }
+
+  .stage-output {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: var(--color-background-secondary);
+    border-radius: 6px;
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+  }
+
+  .output-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: 4px;
+  }
+
+  /* Color accents per stage */
+  .s1 .stage-dot { color: #7F77DD; }
+  .s2 .stage-dot { color: #1D9E75; }
+  .s3 .stage-dot { color: #E85D24; }
+  .s4 .stage-dot { color: #3B8BD4; }
+  .s5 .stage-dot { color: #BA7517; }
+  .s6 .stage-dot { color: #D4537E; }
+
+  .s1 .stage-name { color: #7F77DD; }
+  .s2 .stage-name { color: #1D9E75; }
+  .s3 .stage-name { color: #E85D24; }
+  .s4 .stage-name { color: #3B8BD4; }
+  .s5 .stage-name { color: #BA7517; }
+  .s6 .stage-name { color: #D4537E; }
+
+  /* Side panels */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+
+  .info-card {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 10px;
+    padding: 14px 16px;
+    background: var(--color-background-primary);
+  }
+
+  .info-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot-indicator {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+  }
+
+  .info-list {
+    list-style: none;
+    font-size: 12px;
+    font-family: var(--font-sans);
+    color: var(--color-text-secondary);
+    line-height: 1.9;
+  }
+
+  .info-list li::before {
+    content: '→ ';
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+  }
+
+  /* Flavor taxonomy */
+  .flavor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .flavor-type {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 10px;
+    padding: 14px;
+    background: var(--color-background-primary);
+    text-align: center;
+  }
+
+  .flavor-emoji {
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+
+  .flavor-cat {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    margin-bottom: 4px;
+  }
+
+  .flavor-example {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--color-text-tertiary);
+    line-height: 1.6;
+  }
+
+  .cat-interesting { color: #1D9E75; }
+  .cat-gross { color: #E85D24; }
+  .cat-impossible { color: #7F77DD; }
+
+  /* Nanobanana identity JSON example */
+  .code-block {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'DM Mono', var(--font-mono), monospace;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    overflow-x: auto;
+    white-space: pre;
+    margin-bottom: 2rem;
+  }
+
+  .json-key { color: #7F77DD; }
+  .json-str { color: #1D9E75; }
+  .json-num { color: #E85D24; }
+  .json-bool { color: #3B8BD4; }
+
+  /* Automation legend */
+  .legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 99px;
+  }
+
+  /* Decisions table */
+  .decisions {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .decisions table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: var(--font-sans);
+  }
+
+  .decisions thead tr {
+    background: var(--color-background-secondary);
+  }
+
+  .decisions th {
+    text-align: left;
+    padding: 8px 14px;
+    font-weight: 500;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+  }
+
+  .decisions td {
+    padding: 9px 14px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    color: var(--color-text-secondary);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .decisions tr:last-child td {
+    border-bottom: none;
+  }
+
+  .risk-high { color: #E24B4A; font-weight: 500; }
+  .risk-med { color: #BA7517; font-weight: 500; }
+  .risk-low { color: #1D9E75; font-weight: 500; }
+
+</style>
+
+<div class="root">
+
+  <div class="header">
+    <div class="header-eyebrow">Pipeline Design Doc · v1.0</div>
+    <div class="header-title"><em>Chas,</em> U Drinkin This?</div>
+    <div class="header-sub">Daily AI-generated novelty seltzer account · Semi-automated · Instagram Reels + Twitter/X</div>
+  </div>
+
+  <!-- Flavor Taxonomy -->
+  <div class="section">
+    <div class="section-label">Flavor taxonomy</div>
+    <div class="flavor-grid">
+      <div class="flavor-type">
+        <div class="flavor-emoji">🤔</div>
+        <div class="flavor-cat cat-interesting">Interesting</div>
+        <div class="flavor-example">boysenberry<br>honeydew jalapeño<br>earl grey lavender</div>
+      </div>
+      <div class="flavor-type">
+        <div class="flavor-emoji">🤢</div>
+        <div class="flavor-cat cat-gross">Gross</div>
+        <div class="flavor-example">broccoli & cheese<br>chicken wing<br>gym sock & lime</div>
+      </div>
+      <div class="flavor-type">
+        <div class="flavor-emoji">🌀</div>
+        <div class="flavor-cat cat-impossible">Impossible</div>
+        <div class="flavor-example">yacht rock<br>tuesday afternoon<br>the color beige</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pipeline stages -->
+  <div class="section">
+    <div class="section-label">Daily pipeline</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--color-text-success)"></div> Auto</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--color-text-warning)"></div> You review</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--color-text-danger)"></div> Manual step</div>
+    </div>
+
+    <div class="pipeline">
+
+      <div class="stage s1">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+          <div class="stage-line"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">01 · Nanobanana — flavor oracle</div>
+            <span class="stage-badge badge-auto">Auto</span>
+          </div>
+          <div class="stage-desc">Claude API call generates one flavor per day: picks a category (interesting / gross / impossible), writes the flavor name, a fake tagline, a mock ingredients list, and a short "vibe brief" for the image generator. Outputs a <code>brand_identity.json</code>.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">Claude API</span>
+            <span class="tool-pill">cron / n8n</span>
+            <span class="tool-pill">brand_identity.json</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Emits</div>
+            brand_identity.json · flavor name, category, tagline, palette hint, vibe brief, fake ingredients
+          </div>
+        </div>
+      </div>
+
+      <div class="stage s2">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+          <div class="stage-line"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">02 · Can art generation</div>
+            <span class="stage-badge badge-auto">Auto</span>
+          </div>
+          <div class="stage-desc">brand_identity.json feeds a structured DALL-E 3 or Flux prompt. Generates a flat label illustration (no 3D — flat label art is easier to auto-composite). A second pass composites the label onto a clean seltzer can mockup template via a Pillow/Canvas script.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">DALL-E 3 / Flux</span>
+            <span class="tool-pill">Python Pillow</span>
+            <span class="tool-pill">can mockup template</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Emits</div>
+            can_front.png · label_raw.png · label_composited.png
+          </div>
+        </div>
+      </div>
+
+      <div class="stage s3">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+          <div class="stage-line"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">03 · You review the can</div>
+            <span class="stage-badge badge-review">Review</span>
+          </div>
+          <div class="stage-desc">A simple approval dashboard (or just a Slack/email preview) shows the can art and the flavor identity card. You approve, regenerate, or tweak the prompt. This is the creative gate — the one human moment before video production starts.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">approval UI / Slack</span>
+            <span class="tool-pill">regenerate hook</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Gate</div>
+            approved_can.png → triggers Remotion render
+          </div>
+        </div>
+      </div>
+
+      <div class="stage s4">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+          <div class="stage-line"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">04 · Remotion animation</div>
+            <span class="stage-badge badge-auto">Auto</span>
+          </div>
+          <div class="stage-desc">A parametric Remotion template reads brand_identity.json and the approved can PNG. Animates: (1) cold open with category badge (Gross / Interesting / Impossible), (2) flavor name reveal with kinetic type, (3) can rotates and settles into frame with a held end card. Target: 20–30s for Reels.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">Remotion</span>
+            <span class="tool-pill">Monty agent</span>
+            <span class="tool-pill">brand_identity.json</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Emits</div>
+            video_silent.mp4 · thumbnail.jpg
+          </div>
+        </div>
+      </div>
+
+      <div class="stage s5">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+          <div class="stage-line"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">05 · Audio layer</div>
+            <span class="stage-badge badge-manual">Manual</span>
+          </div>
+          <div class="stage-desc">Two modes: (A) royalty-free track auto-selected from a curated pool via ElevenLabs sound effects + Suno-generated backing — fully automated. (B) You swap in a trending audio clip manually in CapCut before posting — this is how you chase the algorithm. Mode B is always worth doing when you spot a moment.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">ElevenLabs SFX</span>
+            <span class="tool-pill">Suno</span>
+            <span class="tool-pill">CapCut (manual swap)</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Emits</div>
+            video_final.mp4 · ready_to_post flag
+          </div>
+        </div>
+      </div>
+
+      <div class="stage s6">
+        <div class="stage-connector">
+          <div class="stage-dot"></div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-name">06 · Caption + post</div>
+            <span class="stage-badge badge-review">Review</span>
+          </div>
+          <div class="stage-desc">Claude generates 3 caption options (one dry, one chaotic, one engagement-baiting). You pick or edit. Auto-post via Instagram Graph API + Twitter API v2, or paste manually. Instagram Reels thumbnail is set to the held end-card frame.</div>
+          <div class="stage-tools">
+            <span class="tool-pill">Claude API</span>
+            <span class="tool-pill">Instagram Graph API</span>
+            <span class="tool-pill">Twitter API v2</span>
+          </div>
+          <div class="stage-output">
+            <div class="output-label">Emits</div>
+            posted · engagement tracking begins
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- brand_identity.json schema -->
+  <div class="section">
+    <div class="section-label">brand_identity.json schema</div>
+    <div class="code-block"><span class="json-key">"flavor"</span>: <span class="json-str">"Gym Sock &amp; Lime"</span>,
+<span class="json-key">"category"</span>: <span class="json-str">"gross"</span>,
+<span class="json-key">"tagline"</span>: <span class="json-str">"refreshingly horrifying"</span>,
+<span class="json-key">"fake_ingredients"</span>: [<span class="json-str">"carbonated water"</span>, <span class="json-str">"natural flavors"</span>, <span class="json-str">"citric acid"</span>, <span class="json-str">"athlete's foot extract*"</span>],
+<span class="json-key">"palette"</span>: { <span class="json-key">"primary"</span>: <span class="json-str">"#A3C96E"</span>, <span class="json-key">"accent"</span>: <span class="json-str">"#F2E14B"</span>, <span class="json-key">"vibe"</span>: <span class="json-str">"sports-brand-gone-wrong"</span> },
+<span class="json-key">"image_prompt"</span>: <span class="json-str">"flat label art, athletic green with a cartoon worn gym sock and lime wedge, bold retro typography, slightly disgusting but charming"</span>,
+<span class="json-key">"volume_oz"</span>: <span class="json-num">12</span>,
+<span class="json-key">"limited_edition"</span>: <span class="json-bool">false</span>,
+<span class="json-key">"disclaimer"</span>: <span class="json-str">"*not a real ingredient. do not drink."</span></div>
+  </div>
+
+  <!-- Key decisions -->
+  <div class="section">
+    <div class="section-label">Key decisions + tradeoffs</div>
+    <div class="decisions">
+      <table>
+        <thead><tr>
+          <th>Decision</th>
+          <th>Chosen approach</th>
+          <th>Risk</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td>Can 3D mockup</td>
+            <td>Flat label composite onto static PNG template — simpler to automate than Blender 3D renders</td>
+            <td class="risk-low">Low</td>
+          </tr>
+          <tr>
+            <td>Trending audio</td>
+            <td>Manual swap in CapCut — Instagram blocks programmatic trending audio injection</td>
+            <td class="risk-low">Low</td>
+          </tr>
+          <tr>
+            <td>Image gen model</td>
+            <td>DALL-E 3 for speed + API simplicity; Flux as upgrade path for style consistency</td>
+            <td class="risk-med">Med</td>
+          </tr>
+          <tr>
+            <td>Remotion template</td>
+            <td>Single parametric template; brand_identity.json drives all copy + colors</td>
+            <td class="risk-low">Low</td>
+          </tr>
+          <tr>
+            <td>Instagram posting</td>
+            <td>Graph API requires a Facebook-linked Business account — needs setup if not already done</td>
+            <td class="risk-med">Med</td>
+          </tr>
+          <tr>
+            <td>Content archive</td>
+            <td>All generated assets stored in orchard/projects/chas-u-drinkin-this/YYYY-MM-DD/</td>
+            <td class="risk-low">Low</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Two-col info -->
+  <div class="two-col">
+    <div class="info-card">
+      <div class="info-title" style="color: #7F77DD;"><div class="dot-indicator" style="color:#7F77DD"></div> What you build first</div>
+      <ul class="info-list">
+        <li>Nanobanana Claude API prompt + JSON schema</li>
+        <li>brand_identity.json → DALL-E 3 pipeline</li>
+        <li>Pillow can composite script</li>
+        <li>Approval UI (even a basic HTML preview)</li>
+        <li>Remotion parametric template</li>
+        <li>Caption generator + manual post flow</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <div class="info-title" style="color: #1D9E75;"><div class="dot-indicator" style="color:#1D9E75"></div> What you automate later</div>
+      <ul class="info-list">
+        <li>Instagram Graph API auto-post</li>
+        <li>Twitter/X API v2 auto-post</li>
+        <li>Suno background music generation</li>
+        <li>Engagement analytics dashboard</li>
+        <li>Flavor archive / hall of fame page</li>
+        <li>"Vote on tomorrow's flavor" Stories poll</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- File structure -->
+  <div class="section">
+    <div class="section-label">Monorepo path</div>
+    <div class="code-block">orchard/projects/chas-u-drinkin-this/
+├── nanobanana/          ← flavor oracle prompts + scripts
+├── templates/
+│   ├── can-mockup.png   ← base can PNG
+│   └── remotion/        ← Remotion composition
+├── pipeline/            ← orchestration scripts
+├── posts/
+│   └── 2026-04-10/
+│       ├── brand_identity.json
+│       ├── label_raw.png
+│       ├── can_final.png
+│       ├── video_silent.mp4
+│       ├── video_final.mp4
+│       └── caption_options.txt
+└── archive/             ← every flavor ever generated</div>
+  </div>
+
+</div>

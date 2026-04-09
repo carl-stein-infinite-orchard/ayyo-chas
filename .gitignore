@@ -1,0 +1,8 @@
+node_modules/
+video/out/
+video/.remotion/
+__pycache__/
+*.pyc
+.env*
+.DS_Store
+posts/*/video_*.mp4
