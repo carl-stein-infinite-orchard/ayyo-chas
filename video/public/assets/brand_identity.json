@@ -1,0 +1,21 @@
+{
+  "flavor": "Thunderbolt Cucumber",
+  "category": "impossible",
+  "tagline": "Tastes Like Electricity",
+  "fake_ingredients": [
+    "carbonated water",
+    "natural flavors",
+    "citric acid",
+    "ionized lightning*"
+  ],
+  "palette": {
+    "primary": "#00A5D3",
+    "accent": "#E6E600",
+    "vibe": "cyber-farm-fresh"
+  },
+  "image_prompt": "Flat label art featuring a sleek cucumber emitting lightning bolts against a pulsating electric blue backdrop. Incorporate modern digital motifs like circuit patterns. Use bold typography for the name 'Thunderbolt Cucumber' to convey an electrifying experience. Accent with bright yellow for high-voltage appeal.",
+  "volume_oz": 12,
+  "limited_edition": false,
+  "disclaimer": "Surgeons recommend not tampering with real thunderstorms for flavor extraction.",
+  "date": "2026-04-09"
+}
