@@ -68,15 +68,35 @@ Rules:
 - song_picks should be 3 REAL songs that exist. Match the flavor's energy. One crowd-pleaser, one that goes hard, one weird/perfect pick.
 - video_mood.energy should genuinely match the flavor. A delicate flavor should NOT be explosive. A disgusting flavor should probably be unhinged. An abstract flavor should be ethereal. Let the flavor drive the vibe.
 - NEVER repeat a flavor you've seen before. Each day is unique.
+- Avoid recurring ingredients/themes across flavors. No pickle fixation. No cucumber obsession. Spread wide across the flavor universe — fruits, spices, desserts, chemicals, emotions, textures, places, decades, weather patterns, anything.
 """
+
+
+REGISTRY_PATH = os.path.join(os.path.dirname(__file__), "..", "flavor-registry.json")
+
+
+def load_registry() -> list[str]:
+    if os.path.exists(REGISTRY_PATH):
+        with open(REGISTRY_PATH) as f:
+            return json.load(f)
+    return []
+
+
+def save_registry(flavors: list[str]) -> None:
+    with open(REGISTRY_PATH, "w") as f:
+        json.dump(flavors, f, indent=2)
 
 
 def generate_flavor(category: str | None = None) -> dict:
     client = OpenAI()
+    past_flavors = load_registry()
 
     user_msg = "Generate today's flavor."
     if category:
         user_msg = f"Generate today's flavor. It MUST be in the '{category}' category."
+
+    if past_flavors:
+        user_msg += f"\n\nDo NOT generate any of these — they've already been used:\n{', '.join(past_flavors)}"
 
     response = client.chat.completions.create(
         model="gpt-4o",
@@ -90,7 +110,13 @@ def generate_flavor(category: str | None = None) -> dict:
     )
 
     raw = response.choices[0].message.content
-    return json.loads(raw)
+    identity = json.loads(raw)
+
+    # Update registry
+    past_flavors.append(identity["flavor"])
+    save_registry(past_flavors)
+
+    return identity
 
 
 def main():
