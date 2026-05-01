@@ -70,14 +70,17 @@ uv run pipeline/render_video.py "posts/$DATE"
 
 echo ""
 echo "════════════════════════════════════════"
-FLAVOR=$(python3 -c "import json; print(json.load(open('posts/$DATE/brand_identity.json'))['flavor'])")
+# render_video.py renames posts/$DATE → posts/$DATE-<slug>, so find the actual folder
+POST_DIR=$(ls -d posts/${DATE}-* 2>/dev/null | head -1)
+[ -z "$POST_DIR" ] && POST_DIR="posts/$DATE"
+FLAVOR=$(python3 -c "import json; print(json.load(open('$POST_DIR/brand_identity.json'))['flavor'])")
 echo "✓ $FLAVOR"
-echo "  Video: posts/$DATE/video.mp4"
+echo "  Video: $(ls "$POST_DIR"/video_*.mp4 2>/dev/null | head -1)"
 echo "  Caption: ayyo chas, u drinkin this?"
 echo ""
 python3 -c "
 import json
-d = json.load(open('posts/$DATE/brand_identity.json'))
+d = json.load(open('$POST_DIR/brand_identity.json'))
 songs = d.get('song_picks', [])
 if songs:
     print('  Song picks:')

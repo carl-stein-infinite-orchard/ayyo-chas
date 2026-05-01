@@ -2,27 +2,26 @@ import { Composition } from "remotion";
 import { ChasVideo } from "./ChasVideo";
 
 const defaultProps = {
-  flavor: "Garlic & Pickle Swirl",
-  tagline: "Spice up your regrets.",
+  flavor: "Galactic Blackcurrant",
+  tagline: "Outa this world, sorta illegal",
   fakeIngredients: [
     "carbonated water",
     "natural flavors",
     "citric acid",
-    "essence of vampire repellent*",
-    "brine dreams*",
+    "a splash of alien tears*",
   ],
   palette: {
-    primary: "#8F7768",
-    accent: "#C0D72E",
+    primary: "#372948",
+    accent: "#96ceb4",
   },
-  disclaimer: "May cause excessive garlic breath. You asked for this.",
+  disclaimer: "Might cause feelings of wanderlust and existential curiosity.",
   testimonial: {
-    quote: "If chaos had a taste, this would be your new religion. I kissed eight people and they all cringed.",
-    author: "Ruby G., Professional Party Ruiner",
+    quote: "I drank this and now 12 astrology blogs follow me\u2014you do the math.",
+    author: "Astrid Nova, Interdimensional Switchboard Operator",
   },
   videoMood: {
-    energy: "unhinged" as const,
-    bgTone: "#2a261a",
+    energy: "ethereal" as const,
+    bgTone: "#2a3040",
   },
   canImageSrc: "assets/label.png",
 };
